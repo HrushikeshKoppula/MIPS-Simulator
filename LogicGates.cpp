@@ -1,16 +1,17 @@
-#include<iostream>
+#include "LogicGates.h"
 
-class LogicGates{
-    public:
-        static bool AND(bool A,bool B){return A&B;}
-        static bool OR(bool A,bool B){return A|B;}
-        static bool NOT(bool A){return !A;}
-        static bool XOR(bool A,bool B){return A^B;}
-};
+bool LogicGates::AND(bool A, bool B) {
+    return A & B;
+}
 
-int main(){
-    bool A=true;
-    bool B=true;
-    std::cout<<LogicGates::AND(A,B);
-    return 0;
+bool LogicGates::OR(bool A, bool B) {
+    return A | B;
+}
+
+bool LogicGates::NOT(bool A) {
+    return !A;
+}
+
+bool LogicGates::XOR(bool A, bool B) {
+    return A ^ B;
 }
