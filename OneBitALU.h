@@ -3,7 +3,7 @@
 
 #include "LogicGates.h"
 
-class OneBitALU {
+class ONEBITALU {
 public:
     bool a;
     bool b;
@@ -13,7 +13,9 @@ public:
     bool Result;
     bool CarryOut;
     
-    OneBitALU(bool a, bool b, bool CarryIn) : a(a), b(b), CarryIn(CarryIn), Result(false), CarryOut(false) {}
+    ONEBITALU(){}
+
+    ONEBITALU(bool a, bool b, bool CarryIn) : a(a), b(b), CarryIn(CarryIn), Result(false), CarryOut(false) {}
 
     static void setSignals(bool newBinvert, int newOperation);
 

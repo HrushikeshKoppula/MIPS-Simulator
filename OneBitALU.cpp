@@ -1,14 +1,14 @@
 #include "OneBitALU.h"
 
-bool OneBitALU::Binvert = false;
-int OneBitALU::Operation = 0;
+bool ONEBITALU::Binvert = false;
+int ONEBITALU::Operation = 0;
 
-void OneBitALU::setSignals(bool newBinvert, int newOperation) {
+void ONEBITALU::setSignals(bool newBinvert, int newOperation) {
     Binvert = newBinvert;
     Operation = newOperation;
 }
 
-void OneBitALU::RUN() {
+void ONEBITALU::RUN() {
     if(!Binvert){
         switch (Operation) {
             case 0:
