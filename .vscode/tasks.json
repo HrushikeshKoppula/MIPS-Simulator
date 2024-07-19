@@ -8,6 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "${fileDirname}/ALU.cpp",
                 "${fileDirname}/OneBitALU.cpp",
                 "${fileDirname}/LogicGates.cpp",
                 "${fileDirname}/converter.cpp",
