@@ -10,6 +10,7 @@
                 "${file}",
                 "${fileDirname}/OneBitALU.cpp",
                 "${fileDirname}/LogicGates.cpp",
+                "${fileDirname}/converter.cpp",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}"
             ],
