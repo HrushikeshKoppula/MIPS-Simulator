@@ -17,9 +17,11 @@ class THIRTYTWOBITALU{
             ONEBITALU OneBitALU(A[0], B[0], CarryIn);
             OneBitALU.RUN();
             Result[0] = OneBitALU.Result;
-            if((OP==2)&&(((!Binv)&&(A[0]==B[0])&&(A[0]!=Result[0]))||((Binv)&&(A[0]=!B[0])&&(A[0]!=Result[0])))){
+            // Overflow Check
+            if((OP==2)&&(((!Binv)&&(A[0]==B[0])&&(A[0]!=Result[0]))||((Binv)&&(A[0]!=B[0])&&(A[0]==Result[0])))){
                 Overflow=true;
             }
+            // zero check
             zero=false;
             for(int i=0;i<32;i++){
                 zero=LogicGates::OR(zero,Result[i]);
