@@ -8,6 +8,7 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "${fileDirname}/Instruction.cpp",
                 "${fileDirname}/Registers.cpp",
                 "${fileDirname}/Register.cpp",
                 "${fileDirname}/Memory.cpp",

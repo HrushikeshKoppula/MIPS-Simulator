@@ -20,6 +20,7 @@ class THIRTYTWOBITALU{
             // Overflow Check
             if((OP==2)&&(((!Binv)&&(A[0]==B[0])&&(A[0]!=Result[0]))||((Binv)&&(A[0]!=B[0])&&(A[0]==Result[0])))){
                 Overflow=true;
+                for(int i=0;i<32;i++)   Result[i]=0; // so register not changed if overflow
             }
             // zero check
             zero=false;

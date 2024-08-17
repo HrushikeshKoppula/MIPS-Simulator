@@ -2,6 +2,7 @@
 #define REGISTERS_H
 
 #include "Register.h"
+#include <map>
 
 class REGISTERS {
 public:
@@ -37,6 +38,7 @@ public:
     REGISTER dollar_sp;
     REGISTER dollar_fp;
     REGISTER dollar_ra;
+    std::map<int,REGISTER> Register;
 
     // Constructor to initialize all the registers
     REGISTERS();

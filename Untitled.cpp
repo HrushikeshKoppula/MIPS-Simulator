@@ -46,6 +46,10 @@ class MEMORY{};
 
 class CONTROL{};
 
+class PROCESSOR{
+    
+};
+
 class MIPS{
     public:
     REGISTERS Registers;
