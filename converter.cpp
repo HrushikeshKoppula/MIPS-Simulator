@@ -14,3 +14,18 @@ int converter(bool A[32]){
     }
     return n;
 }
+
+void converter(REGISTER &Register,int n){
+    std::bitset<32> bits(n);
+    for(int i=0;i<32;i++){
+        Register[i]=bits[31-i];
+    }
+}
+
+int converter(REGISTER Register){
+    int n=-Register[0];
+    for(int i=1;i<32;i++){
+        n=2*n+Register[i];
+    }
+    return n;
+}

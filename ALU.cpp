@@ -1,13 +1,16 @@
 #include "ALU.h"
 
+void ALU::ADD(bool A[32],bool B[32],bool &zero,bool Result[32],bool &Overflow){
+    THIRTYTWOBITALU ThirtyTwoBitALU(A,B,false,false,2,zero,Result,Overflow);
+}
+void ALU::ADDU(bool A[32],bool B[32],bool &zero,bool Result[32],bool &Overflow){
+    THIRTYTWOBITALU ThirtyTwoBitALU(A,B,false,false,2,zero,Result,Overflow);
+}
 void ALU::AND(bool A[32],bool B[32],bool &zero,bool Result[32],bool &Overflow){
     THIRTYTWOBITALU ThirtyTwoBitALU(A,B,false,false,0,zero,Result,Overflow);
 }
 void ALU::OR(bool A[32],bool B[32],bool &zero,bool Result[32],bool &Overflow){
     THIRTYTWOBITALU ThirtyTwoBitALU(A,B,false,false,1,zero,Result,Overflow);
-}
-void ALU::ADD(bool A[32],bool B[32],bool &zero,bool Result[32],bool &Overflow){
-    THIRTYTWOBITALU ThirtyTwoBitALU(A,B,false,false,2,zero,Result,Overflow);
 }
 void ALU::NOT(bool B[32],bool &zero,bool Result[32],bool &Overflow){
     bool A[32];
