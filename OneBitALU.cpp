@@ -23,6 +23,9 @@ void ONEBITALU::RUN() {
                 Result = LogicGates::XOR(Result, CarryIn);
                 CarryOut = LogicGates::OR(CarryOut, LogicGates::AND(CarryIn, LogicGates::OR(a, b)));
                 break;
+            case 3:
+                Result = LogicGates::XOR(a, b);
+                break;
         }
     }
     else{
@@ -38,6 +41,9 @@ void ONEBITALU::RUN() {
                 CarryOut = LogicGates::AND(a, !b);
                 Result = LogicGates::XOR(Result, CarryIn);
                 CarryOut = LogicGates::OR(CarryOut, LogicGates::AND(CarryIn, LogicGates::OR(a, !b)));
+                break;
+            case 3:
+                Result = LogicGates::XOR(a, !b);
                 break;
         }
     }
