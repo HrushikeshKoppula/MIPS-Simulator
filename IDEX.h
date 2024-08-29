@@ -1,7 +1,7 @@
-#ifndef DECODEDINSTRUCTION_H
-#define DECODEDINSTRUCTION_H
+#ifndef IDEX_H
+#define IDEX_H
 
-class DECODEDINSTRUCTION{
+class IDEX{
     public:
     // R-Type
     int op=0;
@@ -11,9 +11,15 @@ class DECODEDINSTRUCTION{
     int shamt=0;
     int funct=0;
     // I-Type;
-    int immediate=0;
+    bool immediate[16];
     // J-Type
     int target=0;
+    // ALUSTATE
+    bool A[32];
+    bool B[32];
+    bool zero;
+    bool Result[32];
+    bool Overflow;
 };
 
 #endif
