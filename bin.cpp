@@ -1,4 +1,4 @@
-#include <iostream>
+#include <bits/stdc++.h>
 #include "converter.h"
 #include "Register.h"
 #include "Registers.h"
@@ -307,63 +307,17 @@ class PROCESSOR{
 };
 
 
-int main(){
-    PROCESSOR Pro;
-    // Add Example 00000010000100011001000000100000
-    // converter(REGISTERS::Registers[16],16);
-    // converter(REGISTERS::Registers[17],17);
-    // Pro.Instruction[6]=true;
-    // Pro.Instruction[11]=true;
-    // Pro.Instruction[15]=true;
-    // Pro.Instruction[16]=true;
-    // Pro.Instruction[19]=true;
-    // Pro.Instruction[26]=true;
-    // Pro.ID();
-    // Pro.ID();
-    // Pro.EX();
-    // Pro.MEM();
-    // Pro.WB();
-    // cout<<converter(REGISTERS::Registers[18]);
-    // LW Example 10001101001010000000000000000000
-    // for(int i=1;i<32;i++)   Pro.DataMemory[216+i]=1;
-    // converter(REGISTERS::Registers[9],216);
-    // Pro.Instruction[0]=true;
-    // Pro.Instruction[4]=true;
-    // Pro.Instruction[5]=true;
-    // Pro.Instruction[7]=true;
-    // Pro.Instruction[10]=true;
-    // Pro.Instruction[12]=true;
-    // Pro.ID();
-    // Pro.EX();
-    // Pro.MEM();
-    // Pro.WB();
-    // cout<<converter(REGISTERS::Registers[8]);
-    // ADDI Example 00100001001010000000000000001010
-    // REGISTER R;
-    // converter(R,556269578);
-    // converter(REGISTERS::Registers[9],216);
-    // for(int i=0;i<32;i++)   Pro.Instruction[i]=R[i];
-    // Pro.ID();
-    // Pro.EX();
-    // Pro.MEM();
-    // Pro.WB();
-    // cout<<converter(REGISTERS::Registers[8]);
-    // new ADD check with RUN
-    // converter(REGISTERS::Registers[16],16);
-    // converter(REGISTERS::Registers[17],17);
-    // Pro.InstructionMemory[6]=true;
-    // Pro.InstructionMemory[11]=true;
-    // Pro.InstructionMemory[15]=true;
-    // Pro.InstructionMemory[16]=true;
-    // Pro.InstructionMemory[19]=true;
-    // Pro.InstructionMemory[26]=true;
-    // Pro.RUN();
-    // cout<<converter(REGISTERS::Registers[18]);
+
+int main() {
+    PROCESSOR processor;
+    // a=00000000000000000000000000101010
+    // b=00000000000000000000000001010101
+    // c=a+b
     converter(REGISTERS::Registers[10].bits,42);
     converter(REGISTERS::Registers[11].bits,85);
     string inst="00000001010010110100100000100000";
-    for(int i=0;i<32;i++)   Pro.InstructionMemory[i]=(inst[i]=='1');
-    Pro.RUN();
+    for(int i=0;i<32;i++)   processor.InstructionMemory[i]=(inst[i]=='1');
+    processor.RUN();
     cout<<converter(REGISTERS::Registers[9]);
     return 0;
 }
