@@ -15,7 +15,7 @@ class PROCESSOR{
     REGISTER PC;
     REGISTER HI;
     REGISTER LO;
-    // REGISTERS Registers;
+    int MEMORY_SIZE=32768;
     MEMORY InstructionMemory;
     MEMORY DataMemory;
     INSTRUCTION Instruction;
@@ -130,14 +130,60 @@ class PROCESSOR{
             for(int i=16;i<32;i++)  idex.B[i]=idex.immediate[i-16];
             ALU::XOR(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
         }
-
+        // Load-Store
         if(idex.op==0b100011){// LW
             for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
             // Sign-extended
             for(int i=0;i<16;i++)   idex.B[i]=idex.immediate[0];
             for(int i=16;i<32;i++)  idex.B[i]=idex.immediate[i-16];
             ALU::ADD(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+            if(idex.Result[30]&&idex.Result[31])  cout<<"Address used is not Word Alligned\n";
+            idex.Result[30]=false;
+            idex.Result[31]=false;
         }
+        if(idex.op==0b100000){// LB
+            for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
+            // Sign-extended
+            for(int i=0;i<16;i++)   idex.B[i]=idex.immediate[0];
+            for(int i=16;i<32;i++)  idex.B[i]=idex.immediate[i-16];
+            ALU::ADD(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+        }
+        if(idex.op==0b101011){// SW
+            for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
+            // Sign-extended
+            for(int i=0;i<16;i++)   idex.B[i]=idex.immediate[0];
+            for(int i=16;i<32;i++)  idex.B[i]=idex.immediate[i-16];
+            ALU::ADD(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+            if(idex.Result[30]&&idex.Result[31])  cout<<"Address used is not Word Alligned\n";
+            idex.Result[30]=false;
+            idex.Result[31]=false;
+        }
+        if(idex.op==0b101000){// SB
+            for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
+            // Sign-extended
+            for(int i=0;i<16;i++)   idex.B[i]=idex.immediate[0];
+            for(int i=16;i<32;i++)  idex.B[i]=idex.immediate[i-16];
+            ALU::ADD(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+        }
+        // Branch
+        if(idex.op==0b000100){ // BEQ
+            for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
+            for(int i=0;i<32;i++)   idex.B[i]=REGISTERS::Registers[idex.rt][i];
+            ALU::ZERO(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+        }
+        if(idex.op==0b000101){ // BNE
+            for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
+            for(int i=0;i<32;i++)   idex.B[i]=REGISTERS::Registers[idex.rt][i];
+            ALU::ZERO(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+        }
+        if(idex.op==0b000001){//BLTZ
+            for(int i=0;i<32;i++)   idex.A[i]=REGISTERS::Registers[idex.rs][i];
+            ALU::SLT(idex.A,idex.B,idex.zero,idex.Result,idex.Overflow);
+        }
+        // J - Type
+        // if(idex.op==0b000010){// J
+
+        // }
         idex2.op=idex.op;
         idex2.rs=idex.rs;
         idex2.rt=idex.rt;
@@ -149,19 +195,113 @@ class PROCESSOR{
         idex2.zero=idex.zero;
         for(int i=0;i<32;i++)   idex2.Result[i]=idex.Result[i];
         idex2.Overflow=idex.Overflow;
+        if(idex2.Overflow)  cout<<"Overflow occured\n";
     }
     void MEM(){
         if(idex2.op==0b100011){ //LW
             int effective_address = converter(idex2.Result);
             for(int i=0;i<32;i++)   idex2.Result[i]=DataMemory[effective_address+i];
         }
+        if(idex2.op==0b100000){ //LB
+            int effective_address = converter(idex2.Result);
+            for(int i=0;i<24;i++)   idex2.Result[i]=DataMemory[effective_address];
+            for(int i=0;i<8;i++)   DataMemory[effective_address+i]=idex2.Result[24+i];
+        }
+        if(idex2.op==0b101011){ //SW
+            int effective_address = converter(idex2.Result);
+            for(int i=0;i<32;i++)   DataMemory[effective_address+i]=idex2.Result[i];
+        }
+        if(idex2.op==0b101011){ //SB
+            int effective_address = converter(idex2.Result);
+            for(int i=0;i<24;i++)   idex2.Result[i]=DataMemory[effective_address];
+            for(int i=0;i<8;i++)   DataMemory[effective_address+i]=idex2.Result[24+i];
+        }
+        if(idex2.op==0b000100&&!idex2.zero){// BEQ
+            bool temp[32];
+            bool zero;
+            bool Overflow;
+            for(int i=0;i<14;i++)   temp[i]=idex2.immediate[0];
+            for(int i=0;i<16;i++)   temp[i+14]=idex2.immediate[i];
+            temp[30]=false;
+            temp[31]=false;
+            ALU::ADD(PC.bits,temp,zero,PC.bits,Overflow);
+            idex2.op=0;
+            idex2.rs=0;
+            idex2.rt=0;
+            idex2.rd=0;
+            idex2.shamt=0;
+            idex2.funct=0;
+            for(int i=0;i<16;i++)   idex2.immediate[i]=false;
+            idex2.target=0;
+            idex2.zero=false;
+            for(int i=0;i<32;i++)   idex2.A[i]=false;
+            for(int i=0;i<32;i++)   idex2.B[i]=false;
+            for(int i=0;i<32;i++)   idex2.Result[i]=false;
+            idex2.Overflow=false;
+        }
+        if(idex2.op==0b000101&&idex2.zero){// BNE
+            bool temp[32];
+            bool zero;
+            bool Overflow;
+            for(int i=0;i<14;i++)   temp[i]=idex2.immediate[0];
+            for(int i=0;i<16;i++)   temp[i+14]=idex2.immediate[i];
+            temp[30]=false;
+            temp[31]=false;
+            ALU::ADD(PC.bits,temp,zero,PC.bits,Overflow);
+            idex2.op=0;
+            idex2.rs=0;
+            idex2.rt=0;
+            idex2.rd=0;
+            idex2.shamt=0;
+            idex2.funct=0;
+            for(int i=0;i<16;i++)   idex2.immediate[i]=false;
+            idex2.target=0;
+            idex2.zero=false;
+            for(int i=0;i<32;i++)   idex2.A[i]=false;
+            for(int i=0;i<32;i++)   idex2.B[i]=false;
+            for(int i=0;i<32;i++)   idex2.Result[i]=false;
+            idex2.Overflow=false;
+        }
+        if(idex2.op==0b000001&&idex2.zero){// BLTZ
+            bool temp[32];
+            bool zero;
+            bool Overflow;
+            for(int i=0;i<14;i++)   temp[i]=idex2.immediate[0];
+            for(int i=0;i<16;i++)   temp[i+14]=idex2.immediate[i];
+            temp[30]=false;
+            temp[31]=false;
+            ALU::ADD(PC.bits,temp,zero,PC.bits,Overflow);
+            idex2.op=0;
+            idex2.rs=0;
+            idex2.rt=0;
+            idex2.rd=0;
+            idex2.shamt=0;
+            idex2.funct=0;
+            for(int i=0;i<16;i++)   idex2.immediate[i]=false;
+            idex2.target=0;
+            idex2.zero=false;
+            for(int i=0;i<32;i++)   idex2.A[i]=false;
+            for(int i=0;i<32;i++)   idex2.B[i]=false;
+            for(int i=0;i<32;i++)   idex2.Result[i]=false;
+            idex2.Overflow=false;
+        }
     }
     void WB(){
-        if(idex2.op==0){
+        if(idex2.op==0){ // all R-Type instructions write to rd
             for(int i=0;i<32;i++)   REGISTERS::Registers[idex2.rd][i]=idex2.Result[i];
         }
-        if(idex2.op==0b001000||idex2.op==0b001001||idex2.op==0b001010||idex2.op==0b001011||idex2.op==0b00110||idex2.op==0b001101||idex2.op==0b001110||idex2.op==0b100011){
+        if(idex2.op==0b001000||idex2.op==0b001001||idex2.op==0b001010||idex2.op==0b001100||idex2.op==0b001101||idex2.op==0b001110||idex2.op==0b100011||idex2.op==0b100000){
+            // all I-Type instructions write to rt, except SW,SB
             for(int i=0;i<32;i++)   REGISTERS::Registers[idex2.rt][i]=idex2.Result[i];
+        }
+    }
+    void RUN(){
+        while(converter(PC)<MEMORY_SIZE){
+            IF();
+            ID();
+            EX();
+            MEM();
+            WB();
         }
     }
 };
@@ -184,20 +324,20 @@ int main(){
     // Pro.MEM();
     // Pro.WB();
     // cout<<converter(REGISTERS::Registers[18]);
-    // LW Example 10001101001010000000000000001000
-    // for(int i=1;i<32;i++)   Pro.DataMemory[216+i]=1;
-    // converter(REGISTERS::Registers[9],216);
-    // Pro.Instruction[0]=true;
-    // Pro.Instruction[4]=true;
-    // Pro.Instruction[5]=true;
-    // Pro.Instruction[7]=true;
-    // Pro.Instruction[10]=true;
-    // Pro.Instruction[12]=true;
-    // Pro.ID();
-    // Pro.EX();
-    // Pro.MEM();
-    // Pro.WB();
-    // cout<<converter(REGISTERS::Registers[8]);
+    // LW Example 10001101001010000000000000000000
+    for(int i=1;i<32;i++)   Pro.DataMemory[216+i]=1;
+    converter(REGISTERS::Registers[9],216);
+    Pro.Instruction[0]=true;
+    Pro.Instruction[4]=true;
+    Pro.Instruction[5]=true;
+    Pro.Instruction[7]=true;
+    Pro.Instruction[10]=true;
+    Pro.Instruction[12]=true;
+    Pro.ID();
+    Pro.EX();
+    Pro.MEM();
+    Pro.WB();
+    cout<<converter(REGISTERS::Registers[8]);
     // ADDI Example 00100001001010000000000000001010
     // REGISTER R;
     // converter(R,556269578);
@@ -208,5 +348,16 @@ int main(){
     // Pro.MEM();
     // Pro.WB();
     // cout<<converter(REGISTERS::Registers[8]);
+    // new ADD check with RUN
+    // converter(REGISTERS::Registers[16],16);
+    // converter(REGISTERS::Registers[17],17);
+    // Pro.InstructionMemory[6]=true;
+    // Pro.InstructionMemory[11]=true;
+    // Pro.InstructionMemory[15]=true;
+    // Pro.InstructionMemory[16]=true;
+    // Pro.InstructionMemory[19]=true;
+    // Pro.InstructionMemory[26]=true;
+    // Pro.RUN();
+    // cout<<converter(REGISTERS::Registers[18]);
     return 0;
 }
