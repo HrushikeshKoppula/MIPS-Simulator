@@ -281,4 +281,5 @@ void PROCESSOR::RUN(){
         MEM();
         WB();
     }
+    converter(PC,0);
 }
